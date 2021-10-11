@@ -47,7 +47,7 @@
         count = counter;
         label.innerText = counter.toString();
         buttons[0].cost += buttons[0].costIncrease;
-        first.innerText = `x2 Multiplier, Cost: ${cost}`;
+        first.innerText = `x2 Multiplier, Cost: ${buttons[0].cost}`;
         cookie.addEventListener("click", () => {
             if (count < 0) {
                 count = 0
