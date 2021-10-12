@@ -59,6 +59,7 @@ button {
     border-radius: 8px;
     border-color: transparent;
     font-weight: bold;
+    margin: 3px;
 }
 button:disabled {
     background-color: transparent;
@@ -70,4 +71,5 @@ button:disabled {
     font-size: 16px;
     border-radius: 8px;
     border-color: transparent;
+    margin: 3px;
 }
