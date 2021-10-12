@@ -3,11 +3,13 @@
     let section = document.getElementById("section");
     let cookie = document.getElementById("cookie");
     let label = document.getElementById("label");
-    let timer = document.getElementById("timer");
+    let display = document.getElementById("display");
     let cookieText = document.getElementById("click-me");
+    let autoClickerCounter = 0;
     let count = 0;
     let counter = 1;
-    let interval;
+    let intervalOne;
+    let intervalTwo;
     let timeout;
 
     const buttons = [
@@ -82,9 +84,6 @@
         visibility(4, bonus);
     })
     function initiateMultipliers (element, index) {
-        if (count < 0) {
-            count = 0;
-        }
         element.addEventListener("click", () => {
             counter *= buttons[index].multiplier;
             count -= buttons[index].cost;
@@ -103,37 +102,42 @@
     initiateMultipliers(thirdMultiplier, 2);
 
     autoClicker.addEventListener("click", () => {
+        display.style.visibility = "visible";
         count -= buttons[3].cost;
+        autoClickerCounter++;
         if (count < 0) {
             count = 0;
         }
-        timer.innerHTML = "Automatically adds a cookie every 5 seconds";
-        clearInterval(interval);
-        interval = setInterval(() => {
-            cookie.click();
+        label.innerHTML = count.toString();
+        display.innerHTML = `${autoClickerCounter} cookie(s) being accrued every 5 seconds`;
+        clearInterval(intervalOne);
+        intervalOne = setInterval(() => {
+            count += autoClickerCounter;
+            label.innerHTML = count.toString();
         }, 5000);
         autoClicker.disabled = true;
     })
 
     bonus.addEventListener("click", () => {
-        count *= buttons[4].multiplier;
         count -= buttons[4].cost;
-        counter = count;
         if (count < 0) {
             count = 0;
         }
+        label.innerHTML = count.toString();
+        count *= buttons[4].multiplier;
+        counter = count;
         let remainingTime = 29;
-        clearInterval(interval);
+        clearInterval(intervalTwo);
         clearTimeout(timeout);
-        timer.innerHTML = "Bonus activated! 30 seconds remaining.";
-        interval = setInterval(() => {
-            timer.innerHTML = `Bonus activated! ${remainingTime} seconds remaining.`;
+        display.innerHTML = "Bonus activated! 30 seconds remaining.";
+        intervalTwo = setInterval(() => {
+            display.innerHTML = `Bonus activated! ${remainingTime} seconds remaining.`;
             remainingTime -= 1;
         }, 1000);
         timeout = setTimeout(() => {
             counter /= 2;
-            clearInterval(interval);
-            timer.visibility = "hidden";
+            clearInterval(intervalTwo);
+            display.style.visibility = "hidden";
         }, 30000);
         bonus.disabled = true;
     })
