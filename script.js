@@ -70,11 +70,15 @@
         (count < buttons[index].cost) ? element.disabled = true : element.disabled = false;
     }
 
-    cookie.addEventListener("click", () => {
-        count += counter;
+    function checkIfLessThanZero() {
         if (count < 0) {
             count = 0;
         }
+    }
+
+    cookie.addEventListener("click", () => {
+        count += counter;
+        checkIfLessThanZero();
         label.innerHTML = count.toString();
         cookieText.style.visibility = "hidden";
         visibility(0, firstMultiplier);
@@ -87,9 +91,7 @@
         element.addEventListener("click", () => {
             counter *= buttons[index].multiplier;
             count -= buttons[index].cost;
-            if (count < 0) {
-                count = 0;
-            }
+            checkIfLessThanZero();
             label.innerHTML = count.toString();
             buttons[index].cost += buttons[index].costIncrease;
             element.innerHTML = `${counter} x ${buttons[index].multiplier}, ${buttons[index].cost} cookies`;
@@ -105,9 +107,7 @@
         display.style.visibility = "visible";
         count -= buttons[3].cost;
         autoClickerCounter++;
-        if (count < 0) {
-            count = 0;
-        }
+        checkIfLessThanZero();
         label.innerHTML = count.toString();
         display.innerHTML = `${autoClickerCounter} cookie(s) being accrued every 5 seconds`;
         clearInterval(intervalOne);
@@ -120,9 +120,7 @@
 
     bonus.addEventListener("click", () => {
         count -= buttons[4].cost;
-        if (count < 0) {
-            count = 0;
-        }
+        checkIfLessThanZero();
         label.innerHTML = count.toString();
         count *= buttons[4].multiplier;
         counter = count;
@@ -135,7 +133,7 @@
             remainingTime -= 1;
         }, 1000);
         timeout = setTimeout(() => {
-            counter /= 2;
+            counter /= buttons[4].cost;
             clearInterval(intervalTwo);
             display.style.visibility = "hidden";
         }, 30000);
