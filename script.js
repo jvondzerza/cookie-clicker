@@ -1,8 +1,8 @@
-( function () {
+(function() {
 
     let section = document.getElementById("section");
     let cookie = document.getElementById("cookie");
-    let label = document.getElementById("label");
+    let onScreenCount = document.getElementById("on-screen-count");
     let display = document.getElementById("display");
     let cookieText = document.getElementById("click-me");
     let autoClickerCounter = 0;
@@ -11,6 +11,7 @@
     let intervalOne;
     let intervalTwo;
     let timeout;
+    let previousCounterState;
 
     const buttons = [
         {
@@ -32,10 +33,10 @@
             costIncrease: 500
         },
         {
-            cost: 100,
+            cost: 200,
             multiplier: "1 cookie every 5 seconds",
             id: "auto-clicker",
-            costIncrease: 100
+            costIncrease: 200
         },
         {
             cost: 1000,
@@ -79,23 +80,25 @@
     cookie.addEventListener("click", () => {
         count += counter;
         checkIfLessThanZero();
-        label.innerHTML = count.toString();
+        onScreenCount.innerHTML = count.toString();
         cookieText.style.visibility = "hidden";
         visibility(0, firstMultiplier);
         visibility(1, secondMultiplier);
         visibility(2, thirdMultiplier);
         visibility(3, autoClicker);
         visibility(4, bonus);
+        previousCounterState = counter;
     })
     function initiateMultipliers (element, index) {
         element.addEventListener("click", () => {
             counter *= buttons[index].multiplier;
             count -= buttons[index].cost;
             checkIfLessThanZero();
-            label.innerHTML = count.toString();
+            onScreenCount.innerHTML = count.toString();
             buttons[index].cost += buttons[index].costIncrease;
             element.innerHTML = `${counter} x ${buttons[index].multiplier}, ${buttons[index].cost} cookies`;
             element.disabled = true;
+            previousCounterState = counter;
         })
     }
 
@@ -108,12 +111,12 @@
         count -= buttons[3].cost;
         autoClickerCounter++;
         checkIfLessThanZero();
-        label.innerHTML = count.toString();
+        onScreenCount.innerHTML = count.toString();
         display.innerHTML = `${autoClickerCounter} cookie(s) being accrued every 5 seconds`;
         clearInterval(intervalOne);
         intervalOne = setInterval(() => {
             count += autoClickerCounter;
-            label.innerHTML = count.toString();
+            onScreenCount.innerHTML = count.toString();
         }, 5000);
         autoClicker.disabled = true;
     })
@@ -121,7 +124,7 @@
     bonus.addEventListener("click", () => {
         count -= buttons[4].cost;
         checkIfLessThanZero();
-        label.innerHTML = count.toString();
+        onScreenCount.innerHTML = count.toString();
         count *= buttons[4].multiplier;
         counter = count;
         let remainingTime = 29;
@@ -133,7 +136,7 @@
             remainingTime -= 1;
         }, 1000);
         timeout = setTimeout(() => {
-            counter /= buttons[4].cost;
+            counter = previousCounterState;
             clearInterval(intervalTwo);
             display.style.visibility = "hidden";
         }, 30000);
